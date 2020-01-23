@@ -1,0 +1,22 @@
+html, body {
+  margin: 0;
+  width: 100%;
+}
+
+.Home {
+  margin: 25px;
+
+  &-vote {
+    display: flex;
+    flex-wrap: wrap;
+
+    div {
+      display: flex;
+
+      img {
+        width: 75px;
+        height: 75px;
+      }
+    }
+  }
+}
