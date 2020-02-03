@@ -2,7 +2,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Router } from 'react-router'
-import { createBrowserHistory } from 'history'
+import { Provider } from 'react-redux'
+import configureStore from './configureStore'
+import history from './utils/history'
 
 // CSS import
 import './scss/index.scss'
@@ -13,13 +15,18 @@ import App from './App'
 // Services import
 import * as serviceWorker from './serviceWorker'
 
-const bowserHistory = createBrowserHistory()
+const initialState = {};
+const store = configureStore(initialState, history)
 
 ReactDOM.render((
-  <Router history={bowserHistory}>
-    <App url={bowserHistory}/>
-  </Router>
+  <Provider store={store}>
+    <Router history={history}>
+      <App url={history}/>
+    </Router>
+  </Provider>
 ), document.getElementById('root'))
+
+export default store
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

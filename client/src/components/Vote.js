@@ -1,15 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+//Import Lib
+import React, { useState, useEffect, memo } from 'react'
+import PropTypes from 'prop-types'
+import { createStructuredSelector } from 'reselect'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
+//Utils
+import { useInjectSaga } from '../utils/injectSaga'
+import saga from '../sagas'
 
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+//Import Material Core
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Button from '@material-ui/core/Button'
 
-function Vote() {
-  const [teams, setTeams] = useState([])
+//Import Material Icons
+import Favorite from '@material-ui/icons/Favorite'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+
+//Import Actions
+import { getNhlTeamsAction } from '../actions/Actions'
+
+//Import Selectors
+import { makeSelectNhlTeams } from '../selectors'
+
+const key = 'appStore'
+
+export function Vote({
+  getNhlTeams,
+  nhlTeams,
+}) {
+  useInjectSaga({ key, saga })
+
   const [teamsSelected, setTeamsSelected] = useState([])
   const [teamsCount, setTeamsCount] = useState(0)
   const [inputChecked, setInputChecked] = useState({})
@@ -29,20 +51,8 @@ function Vote() {
     }
   }
 
-  const getTeams = async () => {
-    const response = await axios.get('https://statsapi.web.nhl.com/api/v1/teams')
-    const body = await response.data
-    return body.teams
-  }
-
   useEffect(() => {
-    let isSubscribed = true
-
-    getTeams()
-    .then(res => isSubscribed && setTeams(res))
-    .catch(err => console.log(err))
-
-    return () => isSubscribed = false
+    getNhlTeams()
   }, [])
 
   return (
@@ -51,8 +61,8 @@ function Vote() {
         Nombre d'équipe sélectionnée : {teamsCount}
       </section>
       <section className='Home-vote'>
-        {teams.map((team, index) => (
-          <div key={team.name}>
+        {nhlTeams.map((team, index) => (
+          <div key={team.id}>
             <img src={'https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/' + team.id + '.svg'} alt={team.name} />
             <FormControlLabel
               control={<Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />}
@@ -72,4 +82,27 @@ function Vote() {
   )
 }
 
-export default Vote
+Vote.propTypes = {
+  getNhlTeams: PropTypes.func,
+  nhlTeams: PropTypes.array,
+}
+
+const mapStateToProps = createStructuredSelector({
+  nhlTeams: makeSelectNhlTeams(),
+})
+
+export function mapDispatchToProps(dispatch) {
+  return {
+    getNhlTeams: () => dispatch(getNhlTeamsAction()),
+  }
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)
+
+export default compose(
+  withConnect,
+  memo,
+)(Vote)

@@ -15,6 +15,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`))
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header("Header add Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS")
   next()
 })
 app.use(bodyParser.json())
@@ -39,9 +40,12 @@ async function main() {
 
 main().catch(console.dir)
 
-// START API
+//--------------->>>> START API <<<<--------------
 
-
+//---->>>> GET TEAMS <<<<----
+app.get('https://statsapi.web.nhl.com/api/v1/teams', function(res) {
+  res.json(sortTeams)
+})
 
 //--------------->>>> END API <<<<--------------
 
