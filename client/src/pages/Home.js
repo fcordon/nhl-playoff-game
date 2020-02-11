@@ -7,7 +7,7 @@ function Home() {
     <section className='Home'>
       <Vote />
     </section>
-  );
+  )
 }
 
 export default Home
