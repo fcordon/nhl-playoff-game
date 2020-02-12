@@ -3,15 +3,74 @@ html, body {
   width: 100%;
 }
 
+.teams-count {
+  text-align: center;
+  font-weight: bold;
+}
+
+.submit-vote {
+  text-align: center;
+  margin: 20px 0 !important;
+}
+
 .Home {
   margin: 25px;
 
   &-vote {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-evenly;
 
-    div {
+    .conference-section {
+      width: 45%;
       display: flex;
+      flex-wrap: wrap;
+      margin-top: 25px;
+      position: relative;
+      justify-content: space-evenly;
+
+      header {
+        height: 75px;
+        max-height: 100px;
+        width: 100%;
+        display: flex;
+        position: relative;
+
+        h3 {
+          margin-left: 225px;
+          color: #fff;
+        }
+      }
+
+      &.eastern {
+        border-left: 5px solid #c41230;
+        border-right: 5px solid #c41230;
+        border-bottom: 5px solid #c41230;
+
+        header {
+          background-color: #c41230;
+        }
+      }
+
+      &.western {
+        border-left: 5px solid #003e7e;
+        border-right: 5px solid #003e7e;
+        border-bottom: 5px solid #003e7e;
+
+        header {
+          background-color: #003e7e;
+        }
+      }
+
+      &-logo {
+        width: 200px;
+        position: absolute;
+        top: -50%;
+      }
+    }
+
+    .teams {
+      display: flex;
+      margin-top: 20px;
 
       img {
         width: 75px;
