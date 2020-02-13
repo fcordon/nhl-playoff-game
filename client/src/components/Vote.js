@@ -7,17 +7,22 @@ import { createStructuredSelector } from 'reselect'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import Favorite from '@material-ui/icons/Favorite'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import easternConferenceImg from '../img/nhl_eastern_conference.png'
 import westernConferenceImg from '../img/nhl_western_conference.png'
 
-import { makeSelectNhlTeams } from '../api/selectors'
+import { makeSelectNhlTeams, makeSelectLoadingTeams } from '../api/selectors'
 
 import { getNhlTeamsAction } from '../api/actions'
 
-function Vote({getNhlTeams, nhlTeamsData}) {
+function Vote({
+  getNhlTeams, 
+  nhlTeamsData, 
+  loading
+}) {
   const [teamsSelected, setTeamsSelected] = useState([])
   const [teamsCount, setTeamsCount] = useState(0)
   const [teamsCountEastern, setTeamsCountEastern] = useState(0)
@@ -58,19 +63,29 @@ function Vote({getNhlTeams, nhlTeamsData}) {
   }, [])
 
   return (
-    <div>
+    <div className='vote-section'>
+      <section className={'teams-count-mobile'}>
+        <p>{teamsCount} / 16</p>
+      </section>
+      <section className={'teams-count-mobile eastern'}>
+        <p>{teamsCountEastern} / 8</p>
+      </section>
+      <section className={'teams-count-mobile western'}>
+        <p>{teamsCountWestern} / 8</p>
+      </section>
       <section className={'teams-count'}>
         <h2>Nombre d'équipes sélectionnées : {teamsCount} / 16</h2>
+        <Button className={'submit-vote'} variant="contained" disabled={teamsCount < 16} color="primary">Valider</Button>
       </section>
-      <section className='Home-vote'>
+      <section className={'vote-section-teams'}>
         <div className={'conference-section eastern'}>
           <header>
             <img className={'conference-section-logo'} src={easternConferenceImg} alt='Eastern conference' />
-            <h3>{teamsCountEastern < 8 ? 'tu dois sélectionner 8 équipes dans cette conférence : ' + teamsCountEastern : 'Bravo ! tu as sélectionné tes 8 équipes'}</h3>
+            <h3>{teamsCountEastern < 8 ? 'Tu dois sélectionner 8 équipes dans cette conférence : ' + teamsCountEastern : 'Bravo ! tu as sélectionné tes 8 équipes'}</h3>
           </header>
-          {nhlTeamsData.length > 0 && nhlTeamsData.map((team, index) => (
+          {loading ? <CircularProgress /> : nhlTeamsData.length > 0 && nhlTeamsData.map((team, index) => (
             team.conference.name === 'Eastern' && (
-              <div className={'teams'} key={team.name}>
+              <div className={'conference-section-teams'} key={team.name}>
                 <img src={'https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/' + team.id + '.svg'} alt={team.name} />
                 <FormControlLabel
                   control={<Checkbox 
@@ -89,11 +104,11 @@ function Vote({getNhlTeams, nhlTeamsData}) {
         <div className={'conference-section western'}>
           <header>
             <img className={'conference-section-logo'} src={westernConferenceImg} alt='Eastern conference' />
-            <h3>{teamsCountWestern < 8 ? 'tu dois sélectionner 8 équipes dans cette conférence : ' + teamsCountWestern : 'Bravo ! tu as sélectionné tes 8 équipes'}</h3>
+            <h3>{teamsCountWestern < 8 ? 'Tu dois sélectionner 8 équipes dans cette conférence : ' + teamsCountWestern : 'Bravo ! tu as sélectionné tes 8 équipes'}</h3>
           </header>
-          {nhlTeamsData.length > 0 && nhlTeamsData.map((team, index) => (
+          {loading ? <CircularProgress /> : nhlTeamsData.length > 0 && nhlTeamsData.map((team, index) => (
             team.conference.name === 'Western' && (
-              <div className={'teams'} key={team.name}>
+              <div className={'conference-section-teams'} key={team.name}>
                 <img src={'https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/' + team.id + '.svg'} alt={team.name} />
                 <FormControlLabel
                   control={<Checkbox 
@@ -110,7 +125,7 @@ function Vote({getNhlTeams, nhlTeamsData}) {
           ))}
         </div>
       </section>
-      <Button className={'submit-vote'} variant="contained" disabled={teamsCount < 16} color="primary">Valider</Button>
+      <Button className={'submit-vote-mobile'} variant="contained" disabled={teamsCount < 16} color="primary">Valider</Button>
     </div>
   )
 }
@@ -121,10 +136,12 @@ Vote.propTypes = {
     PropTypes.array,
     PropTypes.object
   ]),
+  loading: PropTypes.bool,
 }
 
 const mapStateToProps = createStructuredSelector({
   nhlTeamsData: makeSelectNhlTeams(),
+  loading: makeSelectLoadingTeams(),
 })
 
 function mapDispatchToProps(dispatch) {

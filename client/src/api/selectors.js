@@ -9,6 +9,13 @@ const makeSelectNhlTeams = () =>
     teams => teams.data.nhlTeams,
   );
 
+const makeSelectLoadingTeams = () =>
+  createSelector(
+    appModule,
+    teams => teams.loading.nhlTeams,
+  );
+
 export {
   makeSelectNhlTeams,
+  makeSelectLoadingTeams,
 };
