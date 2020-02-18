@@ -6,7 +6,7 @@ import Content from './Content'
 const App = (props) => {
   return (
     <section className='App'>
-      <AppBar />
+      <AppBar history={props.history} />
       <Content />
     </section>
   );

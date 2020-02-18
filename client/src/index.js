@@ -34,7 +34,7 @@ sagaMiddleware.run(rootSaga)
 ReactDOM.render((
   <Provider store={store}>
     <Router history={bowserHistory}>
-      <App url={bowserHistory}/>
+      <App history={bowserHistory}/>
     </Router>
   </Provider>
 ), document.getElementById('root'))

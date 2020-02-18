@@ -1,11 +1,11 @@
 import React from 'react'
 
-import Vote from '../components/Vote'
+import Vote from '../containers/Vote'
 
-function Home() {
+function Home(props) {
   return (
-    <section className='Home'>
-      <Vote />
+    <section className='globalLayout'>
+      <Vote props={props} />
     </section>
   )
 }
