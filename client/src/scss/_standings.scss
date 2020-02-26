@@ -1,0 +1,25 @@
+.standings-section {
+  .standings-table {
+    display: flex;
+    justify-content: space-evenly;
+
+    .conference-img {
+      img {
+        width: 50px;
+      }
+    }
+
+    .nameCell {
+      display: flex;
+      
+      img {
+        width: 50px;
+      }
+
+      span {
+        align-self: center;
+      }
+
+    }
+  }
+}

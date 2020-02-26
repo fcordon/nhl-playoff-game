@@ -3,19 +3,19 @@ import { initialState } from './reducer';
 
 const appModule = state => state.appData || initialState;
 
-const makeSelectNhlTeams = () =>
+const makeSelectData = () =>
   createSelector(
     appModule,
-    teams => teams.data.nhlTeams,
+    teams => teams.data,
   );
 
-const makeSelectLoadingTeams = () =>
+const makeSelectLoading = () =>
   createSelector(
     appModule,
     teams => teams.loading.nhlTeams,
   );
 
 export {
-  makeSelectNhlTeams,
-  makeSelectLoadingTeams,
+  makeSelectData,
+  makeSelectLoading,
 };

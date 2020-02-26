@@ -14,13 +14,13 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import easternConferenceImg from '../img/nhl_eastern_conference.png'
 import westernConferenceImg from '../img/nhl_western_conference.png'
 
-import { makeSelectNhlTeams, makeSelectLoadingTeams } from '../api/selectors'
+import { makeSelectData, makeSelectLoading } from '../api/selectors'
 
-import { getNhlTeamsAction } from '../api/actions'
+import { getNhlTeamsAction, getStandingsAction } from '../api/actions'
 
 function Vote({
-  getNhlTeams, 
-  nhlTeamsData, 
+  getNhlTeams,
+  appData, 
   loading
 }) {
   const [teamsSelected, setTeamsSelected] = useState([])
@@ -28,7 +28,13 @@ function Vote({
   const [teamsCountEastern, setTeamsCountEastern] = useState(0)
   const [inputCheckedEastern, setInputCheckedEastern] = useState({})
   const [teamsCountWestern, setTeamsCountWestern] = useState(0)
-  const [inputCheckedWestern, setInputCheckedWestern] = useState({})
+  const [inputCheckedWestern, setInputCheckedWestern] = useState({})  
+  
+  useEffect(() => {
+    getNhlTeams()
+  }, [])
+
+  console.log('appData : ', appData)
 
   const handleVote = (index, conf) => event => {
     if (event.target.checked && teamsCount < 16) {
@@ -58,10 +64,6 @@ function Vote({
     }
   }
 
-  useEffect(() => {
-    getNhlTeams()
-  }, [])
-
   return (
     <div className='vote-section'>
       <section className={'teams-count-mobile'}>
@@ -83,7 +85,7 @@ function Vote({
             <img className={'conference-section-logo'} src={easternConferenceImg} alt='Eastern conference' />
             <h3>{teamsCountEastern < 8 ? 'Tu dois sélectionner 8 équipes dans cette conférence : ' + teamsCountEastern : 'Bravo ! tu as sélectionné tes 8 équipes'}</h3>
           </header>
-          {loading ? <CircularProgress /> : nhlTeamsData.length > 0 && nhlTeamsData.map((team, index) => (
+          {loading.nhlTeams ? <CircularProgress /> : appData.nhlTeams.length > 0 && appData.nhlTeams.map((team, index) => (
             team.conference.name === 'Eastern' && (
               <div className={'conference-section-teams'} key={team.name}>
                 <img src={'https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/' + team.id + '.svg'} alt={team.name} />
@@ -106,7 +108,7 @@ function Vote({
             <img className={'conference-section-logo'} src={westernConferenceImg} alt='Eastern conference' />
             <h3>{teamsCountWestern < 8 ? 'Tu dois sélectionner 8 équipes dans cette conférence : ' + teamsCountWestern : 'Bravo ! tu as sélectionné tes 8 équipes'}</h3>
           </header>
-          {loading ? <CircularProgress /> : nhlTeamsData.length > 0 && nhlTeamsData.map((team, index) => (
+          {loading.nhlTeams ? <CircularProgress /> : appData.nhlTeams.length > 0 && appData.nhlTeams.map((team, index) => (
             team.conference.name === 'Western' && (
               <div className={'conference-section-teams'} key={team.name}>
                 <img src={'https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/' + team.id + '.svg'} alt={team.name} />
@@ -132,16 +134,13 @@ function Vote({
 
 Vote.propTypes = {
   getNhlTeams: PropTypes.func,
-  nhlTeamsData: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.object
-  ]),
+  appData: PropTypes.object,
   loading: PropTypes.bool,
 }
 
 const mapStateToProps = createStructuredSelector({
-  nhlTeamsData: makeSelectNhlTeams(),
-  loading: makeSelectLoadingTeams(),
+  appData: makeSelectData(),
+  loading: makeSelectLoading(),
 })
 
 function mapDispatchToProps(dispatch) {

@@ -84,7 +84,6 @@ export default function PrimarySearchAppBar(props) {
   }
 
   const handleOnItemClick = value => {
-    console.log('props : ', props)
     const newRoute = `/${value}`
     if (props.history.location !== newRoute) {
       props.history.push(newRoute)
