@@ -20,7 +20,7 @@ export default function TableStandings({ conferenceStandings, conferenceImg }) {
             <TableCell className='conference-img' align='center'>
               <img src={conferenceImg === 'eastern' ? easternConferenceImg : westernConferenceImg} alt={conferenceImg} />
             </TableCell>
-            <TableCell>Équipe</TableCell>
+            <TableCell colSpan={2} align='center'>Équipe</TableCell>
             <TableCell align='center'>GP</TableCell>
             <TableCell align='center'>Wins</TableCell>
             <TableCell align='center'>Losses</TableCell>
@@ -35,7 +35,10 @@ export default function TableStandings({ conferenceStandings, conferenceImg }) {
                 {index + 1}
               </TableCell>
               <TableCell className='nameCell'>
-                <img src={'https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/' + row.id + '.svg'} alt={row.name} /> <span>{row.name}</span>
+                <img src={'https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/' + row.id + '.svg'} alt={row.name} />
+              </TableCell>
+              <TableCell className='nameCell'>
+                <span>{row.name}</span>
               </TableCell>
               <TableCell align='center'>{row.gamesPlayed}</TableCell>
               <TableCell align='center'>{row.wins}</TableCell>
