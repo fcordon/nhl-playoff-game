@@ -12,10 +12,17 @@ const makeSelectData = () =>
 const makeSelectLoading = () =>
   createSelector(
     appModule,
-    teams => teams.loading.nhlTeams,
+    teams => teams.loading,
+  );
+
+const makeSelectAuth = () =>
+  createSelector(
+    appModule,
+    teams => teams.isAuth,
   );
 
 export {
   makeSelectData,
   makeSelectLoading,
+  makeSelectAuth,
 };

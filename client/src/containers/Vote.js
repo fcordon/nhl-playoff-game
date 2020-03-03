@@ -16,7 +16,7 @@ import westernConferenceImg from '../img/nhl_western_conference.png'
 
 import { makeSelectData, makeSelectLoading } from '../api/selectors'
 
-import { getNhlTeamsAction, getStandingsAction } from '../api/actions'
+import { getNhlTeamsAction } from '../api/actions'
 
 function Vote({
   getNhlTeams,
@@ -33,8 +33,6 @@ function Vote({
   useEffect(() => {
     getNhlTeams()
   }, [])
-
-  console.log('appData : ', appData)
 
   const handleVote = (index, conf) => event => {
     if (event.target.checked && teamsCount < 16) {

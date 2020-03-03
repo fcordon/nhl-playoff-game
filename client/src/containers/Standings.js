@@ -43,6 +43,7 @@ function Vote({
   useEffect(() => {
     let easternStanding = []
     let westernStanding = []
+    
     appData.standings.length > 0 && appData.standings.map(standing => {
       standing.conference.name === 'Eastern' && standing.teamRecords.map(record => {
         easternStanding = [...easternStanding, {'position':record.conferenceRank < 10 ? 0 + record.conferenceRank : record.conferenceRank,'name':record.team.name,'wins':record.leagueRecord.wins,'losses':record.leagueRecord.losses,'ot':record.leagueRecord.ot,'gamesPlayed':record.gamesPlayed,'points':record.points,'id':record.team.id}]

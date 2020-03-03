@@ -4,9 +4,11 @@ import request from '../utils/request'
 import {
   GET_NHL_TEAMS,
   GET_STANDINGS,
+  GET_SERIES,
   API_BASE_URL,
   API_GET_TEAMS,
   API_GET_STANDINGS,
+  API_GET_SERIES,
 } from './constants'
 
 import {
@@ -14,6 +16,8 @@ import {
   getNhlTeamsErrorAction,
   getStandingsSuccessAction,
   getStandingsErrorAction,
+  getSeriesSuccessAction,
+  getSeriesErrorAction,
 } from './actions'
 
 const requestOptionsGet = {
@@ -38,10 +42,10 @@ export function* getNhlTeams() {
 }
 
 export function* getStandings() {
-  const teamsRequestUrl = API_BASE_URL + API_GET_STANDINGS
+  const standingsRequestUrl = API_BASE_URL + API_GET_STANDINGS
 
   try {
-    const requestResponse = yield call(request, teamsRequestUrl, requestOptionsGet)
+    const requestResponse = yield call(request, standingsRequestUrl, requestOptionsGet)
 
     if (requestResponse.status === 'error') {
       yield put(getStandingsErrorAction(requestResponse.message));
@@ -53,9 +57,26 @@ export function* getStandings() {
   }
 }
 
+export function* getSeries() {
+  const seriesRequestUrl = API_BASE_URL + API_GET_SERIES
+
+  try {
+    const requestResponse = yield call(request, seriesRequestUrl, requestOptionsGet)
+
+    if (requestResponse.status === 'error') {
+      yield put(getSeriesErrorAction(requestResponse.message));
+    } else {
+      yield put(getSeriesSuccessAction(requestResponse.data.records));
+    }
+  } catch (error) {
+    yield put(getSeriesErrorAction(error));
+  }
+}
+
 function* watchIncrementAsync() {
   yield takeLatest(GET_NHL_TEAMS, getNhlTeams)
   yield takeLatest(GET_STANDINGS, getStandings)
+  yield takeLatest(GET_SERIES, getSeries)
 }
 
 // notice how we now only export the rootSaga

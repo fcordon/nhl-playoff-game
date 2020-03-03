@@ -1,0 +1,24 @@
+.login-section {
+  width: 50%;
+  margin: 0 auto;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  &-cards {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+
+    &-card {
+      width: 30%;
+  
+      &-title {
+        font-weight: bold;
+        color: #000;
+      }
+    }
+  }
+}

@@ -3,6 +3,14 @@
     display: flex;
     justify-content: space-evenly;
 
+    @media screen and (max-width:812px) {
+      display: block;
+
+      .eastern {
+        margin-bottom: 20px;
+      }
+    }
+
     .conference-img {
       img {
         width: 50px;

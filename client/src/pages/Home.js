@@ -1,11 +1,11 @@
 import React from 'react'
 
-import Vote from '../containers/Vote'
+import Login from '../containers/Login'
 
 function Home(props) {
   return (
     <section className='globalLayout'>
-      <Vote props={props} />
+      <Login props={props} />
     </section>
   )
 }

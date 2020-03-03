@@ -143,13 +143,13 @@ export default function PrimarySearchAppBar(props) {
     <div className={classes.grow}>
       <AppBar position="sticky">
         <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h6" noWrap onClick={() => handleOnItemClick('')}>
             NHL Vote App
           </Typography>
           <StyledListItem
             button
             key="Vote"
-            onClick={() => handleOnItemClick('')}
+            onClick={() => handleOnItemClick('userVote')}
           >
             <ListItemText
               primary="A voter !"
@@ -164,6 +164,15 @@ export default function PrimarySearchAppBar(props) {
               primary="Classement NHL"
             />
           </StyledListItem>
+          {/* <StyledListItem
+            button
+            key="series"
+            onClick={() => handleOnItemClick('series')}
+          >
+            <ListItemText
+              primary="Series"
+            />
+          </StyledListItem> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 17 new notifications" color="inherit">
