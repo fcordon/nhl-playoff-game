@@ -5,10 +5,13 @@ import {
   GET_NHL_TEAMS,
   GET_STANDINGS,
   GET_SERIES,
+  POST_USER,
+  GET_USER,
   API_BASE_URL,
   API_GET_TEAMS,
   API_GET_STANDINGS,
   API_GET_SERIES,
+  API_USERS,
 } from './constants'
 
 import {
@@ -18,11 +21,25 @@ import {
   getStandingsErrorAction,
   getSeriesSuccessAction,
   getSeriesErrorAction,
+  getUserSuccessAction,
+  getUserErrorAction,
+  postUserSuccessAction,
+  postUserErrorAction,
 } from './actions'
 
 const requestOptionsGet = {
   method: 'GET',
   mode: 'no-cors'
+}
+
+const requestOptionsPost = body => {
+  const header = {
+    method: 'POST',
+    mode: 'no-cors',
+    body,
+  }
+
+  return header
 }
 
 export function* getNhlTeams() {
@@ -73,10 +90,44 @@ export function* getSeries() {
   }
 }
 
+export function* getUser(payload) {
+  const userRequestUrl = `${API_USERS}?pseudo=${payload.data.pseudo}&password=${payload.data.password}`
+
+  try {
+    const requestResponse = yield call(request, userRequestUrl, requestOptionsGet)
+
+    if (requestResponse.status === 'error') {
+      yield put(getUserErrorAction(requestResponse.message));
+    } else {
+      yield put(getUserSuccessAction(requestResponse.data));
+    }
+  } catch (error) {
+    yield put(getUserErrorAction(error));
+  }
+}
+
+export function* postUser(newUser) {
+  const userRequestUrl = API_USERS
+
+  try {
+    const requestResponse = yield call(request, userRequestUrl, requestOptionsPost(newUser.payload))
+
+    if (requestResponse.status === 'error') {
+      yield put(postUserErrorAction(requestResponse.message));
+    } else {
+      yield put(postUserSuccessAction(requestResponse.data));
+    }
+  } catch (error) {
+    yield put(postUserErrorAction(error));
+  }
+}
+
 function* watchIncrementAsync() {
   yield takeLatest(GET_NHL_TEAMS, getNhlTeams)
   yield takeLatest(GET_STANDINGS, getStandings)
   yield takeLatest(GET_SERIES, getSeries)
+  yield takeLatest(GET_USER, getUser)
+  yield takeLatest(POST_USER, postUser)
 }
 
 // notice how we now only export the rootSaga

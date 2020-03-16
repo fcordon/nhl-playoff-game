@@ -10,6 +10,12 @@ import {
   GET_SERIES,
   GET_SERIES_SUCCESS,
   GET_SERIES_ERROR,
+  GET_USER,
+  GET_USER_SUCCESS,
+  GET_USER_ERROR,
+  POST_USER,
+  POST_USER_SUCCESS,
+  POST_USER_ERROR,
 } from './constants'
 
 // The initial state of the App
@@ -20,19 +26,22 @@ export const initialState = {
     standings: false,
     series: false,
     auth: false,
+    user: false,
   },
   error: {
     nhlTeams: false,
     standings: false,
     series: false,
     auth: false,
+    user: false,
   },
   data: {
     nhlTeams: {},
     standings: {},
     series: {},
+    isAuth: false,
+    user: {},
   },
-  isAuth: false,
 }
 
 /* eslint-disable default-case, no-param-reassign */
@@ -82,6 +91,38 @@ const Reducers = (state = initialState, action) =>
       case GET_SERIES_ERROR:
         store.loading.series = false;
         store.error.series = action.error;
+        break;
+
+      case POST_USER:
+        store.loading.user = true;
+        break;
+
+      case POST_USER_SUCCESS:
+        store.loading.user = false;
+        store.error.user = false;
+        store.data.user = action.payload;
+        break;
+
+      case POST_USER_ERROR:
+        store.loading.user = false;
+        store.error.user = action.error;
+        break;
+
+      case GET_USER:
+        store.loading.user = true;
+        break;
+
+      case GET_USER_SUCCESS:
+        store.loading.user = false;
+        store.error.user = false;
+        store.data.isAuth = true;
+        store.data.user = action.payload;
+        break;
+
+      case GET_USER_ERROR:
+        store.loading.user = false;
+        store.data.isAuth = false;
+        store.error.user = action.error;
         break;
     }
   })

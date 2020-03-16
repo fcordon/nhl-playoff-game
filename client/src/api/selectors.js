@@ -6,23 +6,23 @@ const appModule = state => state.appData || initialState;
 const makeSelectData = () =>
   createSelector(
     appModule,
-    teams => teams.data,
+    app => app.data,
   );
 
 const makeSelectLoading = () =>
   createSelector(
     appModule,
-    teams => teams.loading,
+    app => app.loading,
   );
 
-const makeSelectAuth = () =>
+const makeSelectError = () =>
   createSelector(
     appModule,
-    teams => teams.isAuth,
+    app => app.error,
   );
 
 export {
   makeSelectData,
   makeSelectLoading,
-  makeSelectAuth,
+  makeSelectError,
 };

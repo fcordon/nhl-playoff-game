@@ -7,6 +7,11 @@ html, body {
   margin: 50px 20px;
 }
 
+.backdrop-component {
+  z-index: 10000 !important;
+  color: #fff;
+}
+
 @import './login';
 @import './vote';
 @import './standings';

@@ -8,6 +8,12 @@ import {
   GET_SERIES,
   GET_SERIES_SUCCESS,
   GET_SERIES_ERROR,
+  GET_USER,
+  GET_USER_SUCCESS,
+  GET_USER_ERROR,
+  POST_USER,
+  POST_USER_SUCCESS,
+  POST_USER_ERROR,
 } from './constants'
 
 // GET NHL TEAMS
@@ -69,6 +75,50 @@ export function getSeriesSuccessAction(payload) {
 export function getSeriesErrorAction(error) {
   return {
     type: GET_SERIES_ERROR,
+    error,
+  };
+}
+
+// GET USER
+export function getUserAction(data) {
+  return {
+    type: GET_USER,
+    data
+  };
+}
+
+export function getUserSuccessAction(payload) {
+  return {
+    type: GET_USER_SUCCESS,
+    payload,
+  };
+}
+
+export function getUserErrorAction(error) {
+  return {
+    type: GET_USER_ERROR,
+    error,
+  };
+}
+
+// POST USER
+export function postUserAction(payload) {
+  return {
+    type: POST_USER,
+    payload
+  };
+}
+
+export function postUserSuccessAction(payload) {
+  return {
+    type: POST_USER_SUCCESS,
+    payload,
+  };
+}
+
+export function postUserErrorAction(error) {
+  return {
+    type: POST_USER_ERROR,
     error,
   };
 }

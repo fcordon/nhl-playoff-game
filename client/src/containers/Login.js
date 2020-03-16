@@ -3,52 +3,36 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import PropTypes from 'prop-types'
 import { createStructuredSelector } from 'reselect'
-import clsx from 'clsx';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import FormControl from '@material-ui/core/FormControl'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Divider from '@material-ui/core/Divider'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import Backdrop from '@material-ui/core/Backdrop'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Button from '@material-ui/core/Button'
 
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import AccountCircle from '@material-ui/icons/AccountCircle'
 
-import { makeSelectAuth, makeSelectLoading } from '../api/selectors'
+import { makeSelectLoading, makeSelectData, makeSelectError } from '../api/selectors'
 
-// import { getAuthAction, postAuthAction } from '../api/actions'
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  margin: {
-    margin: theme.spacing(1),
-  },
-  withoutLabel: {
-    marginTop: theme.spacing(3),
-  },
-  textField: {
-    width: 200,
-  },
-}));
+import { postUserAction, getUserAction } from '../api/actions'
 
 function Login({
+  postUser,
+  getUser,
   loading,
-  isAuth,
-  postAuth,
-  getAuth
+  storeData,
+  storeError,
 }) {
-  const classes = useStyles;
 
   const [connect, setConnect] = useState({
     pseudo: '',
@@ -64,28 +48,67 @@ function Login({
     showPassword: false,
   });
 
+  const [isInscriptionDisabled, setIsInscriptionDisabled] = useState(false)
+  const [isConnectDisabled, setIsConnectDisabled] = useState(false)
+
+  // useEffect(() => {
+  //   getUser()
+  // }, [])
+
   const handleChangeConnect = prop => event => {
     setConnect({ ...connect, [prop]: event.target.value });
-  };
+    setIsConnectDisabled(canLogin())
+  }
 
   const handleClickShowPasswordConnect = () => {
     setConnect({ ...connect, showPassword: !connect.showPassword });
-  };
+  }
 
   const handleChangeInscription = prop => event => {
     setInscription({ ...inscription, [prop]: event.target.value });
-  };
+    setIsInscriptionDisabled(canLogup())
+  }
+
+  const canLogup = () => inscription.nom && inscription.prenom && inscription.pseudo && inscription.password
+  const canLogin = () => connect.pseudo && connect.password
 
   const handleClickShowPasswordInscription = () => {
     setInscription({ ...inscription, showPassword: !inscription.showPassword });
-  };
+  }
 
   const handleMouseDownPassword = event => {
     event.preventDefault();
-  };
+  }
+
+  const handleInscription = () => {
+    const dataInscription = {
+      nom: inscription.nom,
+      prenom: inscription.prenom,
+      pseudo: inscription.pseudo,
+      password: inscription.password
+    }
+
+    // storeData.find(element => {
+    //   if(element.)
+    // })
+
+    postUser(dataInscription)
+  }
+
+  const handleConnect = () => {
+    const dataConnect = {
+      pseudo: connect.pseudo,
+      password: connect.password
+    }
+
+    getUser(dataConnect)
+  }
 
   return (
     <div className='login-section'>
+      <Backdrop className='backdrop-component' open={loading.user}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <h2>Bienvenue dans le concours Playoff NHL des Elans Gay !!!!</h2>
       <div className='login-section-cards'>
         <Card className='login-section-cards-card'>
@@ -95,7 +118,7 @@ function Login({
             </Typography>
             <Divider />
             <div className='login-section-card-inputs'>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
+              <FormControl className='inputs'>
                 <InputLabel htmlFor="standard-adornment-nom">Nom</InputLabel>
                 <Input
                   id="standard-adornment-nom"
@@ -104,7 +127,7 @@ function Login({
                   onChange={handleChangeInscription('nom')}
                 />
               </FormControl>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
+              <FormControl className='inputs'>
                 <InputLabel htmlFor="standard-adornment-prenom">Prénom</InputLabel>
                 <Input
                   id="standard-adornment-prenom"
@@ -113,19 +136,19 @@ function Login({
                   onChange={handleChangeInscription('prenom')}
                 />
               </FormControl>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-pseudo">Pseudo</InputLabel>
+              <FormControl className='inputs'>
+                <InputLabel htmlFor="standard-adornment-pseudo-inscription">Pseudo</InputLabel>
                 <Input
-                  id="standard-adornment-pseudo"
+                  id="standard-adornment-pseudo-inscription"
                   type='text'
                   value={inscription.pseudo}
                   onChange={handleChangeInscription('pseudo')}
                 />
               </FormControl>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+              <FormControl className='inputs'>
+                <InputLabel htmlFor="standard-adornment-password-inscription">Password</InputLabel>
                 <Input
-                  id="standard-adornment-password"
+                  id="standard-adornment-password-inscription"
                   type={inscription.showPassword ? 'text' : 'password'}
                   value={inscription.password}
                   onChange={handleChangeInscription('password')}
@@ -145,7 +168,14 @@ function Login({
             </div>
           </CardContent>
           <CardActions>
-            <Button variant="contained" color="primary">Valider</Button>
+            <Button 
+              variant="contained" 
+              color="primary"
+              onClick={handleInscription}
+              disabled={!isInscriptionDisabled}
+            >
+              Valider
+            </Button>
           </CardActions>        
         </Card>
         <Card className='login-section-cards-card'>
@@ -155,10 +185,10 @@ function Login({
             </Typography>
             <Divider />
             <div className='login-section-card-inputs'>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-pseudo">Pseudo</InputLabel>
+              <FormControl className='inputs'>
+                <InputLabel htmlFor="standard-adornment-pseudo-connect">Pseudo</InputLabel>
                 <Input
-                  id="standard-adornment-pseudo"
+                  id="standard-adornment-pseudo-connect"
                   type='text'
                   value={connect.pseudo}
                   onChange={handleChangeConnect('pseudo')}
@@ -169,10 +199,10 @@ function Login({
                   }
                 />
               </FormControl>
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+              <FormControl className='inputs'>
+                <InputLabel htmlFor="standard-adornment-password-connect">Password</InputLabel>
                 <Input
-                  id="standard-adornment-password"
+                  id="standard-adornment-password-connect"
                   type={connect.showPassword ? 'text' : 'password'}
                   value={connect.password}
                   onChange={handleChangeConnect('password')}
@@ -192,7 +222,17 @@ function Login({
             </div>
           </CardContent>
           <CardActions>
-            <Button variant="contained" color="primary">Valider</Button>
+            <Button 
+              variant="contained" 
+              color="primary"
+              onClick={handleConnect}
+              disabled={!isConnectDisabled}
+            >
+              Valider
+            </Button>
+            {storeError.user && (
+              <p>{storeError.user}</p>
+            )}
           </CardActions>        
         </Card>
       </div>
@@ -201,21 +241,23 @@ function Login({
 }
 
 Login.propTypes = {
-  isAuth: PropTypes.bool,
-  Loading: PropTypes.bool,
-  // postAuth: PropTypes.func,
-  // getAuth: PropTypes.func,
+  postUser: PropTypes.func,
+  getUser: PropTypes.func,
+  loading: PropTypes.object,
+  storeData: PropTypes.object,
+  storeError: PropTypes.object,
 }
 
 const mapStateToProps = createStructuredSelector({
-  isAuth: makeSelectAuth(),
   loading: makeSelectLoading(),
+  storeData: makeSelectData(),
+  storeError: makeSelectError(),
 })
 
 function mapDispatchToProps(dispatch) {
   return {
-    // postAuth: () => dispatch(postAuthAction()),
-    // getAuth: () => dispatch(getAuthAction()),
+    postUser: data => dispatch(postUserAction(data)),
+    getUser: data => dispatch(getUserAction(data)),
   }
 }
 
